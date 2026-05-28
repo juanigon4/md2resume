@@ -1,0 +1,9 @@
+services:
+  md2resume:
+    build: .
+    image: md2resume:local
+    working_dir: /data
+    stdin_open: true
+    tty: true
+    # Mount your own folder at run time, e.g.:
+    # docker compose run --rm -v "$HOME/resumes:/data" md2resume /data/resume.md

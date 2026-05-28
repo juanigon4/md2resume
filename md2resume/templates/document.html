@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>{{ title }}</title>
+  <style>
+    @page {
+      size: {{ page_size }};
+      margin: {{ page_margin }};
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: {{ style.body_font }};
+      font-size: {{ style.body_size }};
+      line-height: {{ style.line_height }};
+      color: {{ style.text }};
+      margin: 0;
+    }
+
+    /* ── Photo & QR (optional) ── */
+    .resume-identity {
+      display: flex;
+      gap: 12pt;
+      align-items: flex-start;
+      margin-bottom: 10pt;
+    }
+
+    .resume-media {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6pt;
+    }
+
+    .resume-photo img {
+      width: 68pt;
+      height: 68pt;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid {{ style.border }};
+      display: block;
+    }
+
+    .resume-qr img {
+      width: 44pt;
+      height: 44pt;
+      display: block;
+      border: 1px solid {{ style.border }};
+      border-radius: 2pt;
+      padding: 2pt;
+      background: #ffffff;
+    }
+
+    .resume-qr-label {
+      display: block;
+      font-size: 6.5pt;
+      color: {{ style.muted }};
+      text-align: center;
+      margin-top: 2pt;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .resume-identity-text { flex: 1 1 auto; min-width: 0; }
+
+    .resume-sidebar .resume-identity {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 10pt;
+    }
+
+    .resume-sidebar .resume-photo img {
+      border-color: {{ style.accent }};
+    }
+
+    .resume-sidebar .resume-qr {
+      background: #ffffff;
+      padding: 5pt;
+      border-radius: 4pt;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    .resume-sidebar .resume-qr img {
+      width: 52pt;
+      height: 52pt;
+      border: none;
+      padding: 0;
+    }
+
+    .resume-sidebar .resume-qr-label { color: #94a3b8; }
+
+    /* ── Enhancv example layout (examples/mid-level-information-technology.svg) ── */
+    body.layout-enhancv_sidebar .resume-sidebar {
+      width: 35%;
+      background: #3c5769;
+    }
+
+    body.layout-enhancv_sidebar .resume-main {
+      width: 65%;
+      padding-left: 16pt;
+    }
+
+    body.layout-enhancv_sidebar .resume-sidebar .resume-photo img {
+      width: 76pt;
+      height: 76pt;
+    }
+
+    body.layout-enhancv_sidebar .resume-main h2 {
+      border-bottom-width: 2px;
+      border-bottom-color: #3c5769;
+      color: #3c5769;
+    }
+
+    /* ── Photo header layout ── */
+    .layout-photo-header .resume-header-panel {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12pt;
+      padding-bottom: 10pt;
+      border-bottom: 2px solid {{ style.border }};
+    }
+
+    .layout-photo-header .resume-identity {
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .layout-photo-header .resume-identity-text { flex: 1; padding-right: 14pt; }
+
+  /* ── ATS heavy section rules ── */
+    body.layout-ats_sections .resume-body h2 {
+      border-bottom: 3px solid {{ style.primary }};
+      padding-bottom: 4pt;
+      margin-top: 13pt;
+      font-weight: 600;
+    }
+
+    .resume-header-bar .resume-identity {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .resume-header-bar .resume-photo img {
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .resume-header-bar .resume-qr-label { color: #cbd5e1; }
+
+    .resume-top .resume-media { flex-direction: row; gap: 8pt; align-self: flex-end; }
+
+    h1 {
+      font-family: {{ style.heading_font }};
+      font-size: {{ style.h1_size }};
+      font-weight: 700;
+      color: {{ style.primary }};
+      margin: 0 0 {{ density.h1_margin_bottom }} 0;
+      letter-spacing: -0.01em;
+    }
+
+    .contact {
+      font-size: calc({{ style.body_size }} - 0.5pt);
+      color: {{ style.muted }};
+      margin: 0 0 11pt 0;
+      line-height: 1.5;
+    }
+
+    .contact a {
+      color: {{ style.secondary }};
+      text-decoration: none;
+    }
+
+    {% if style.layout not in ['minimal', 'header_bar', 'sidebar_left'] %}
+    .contact {
+      padding: 6pt 0 8pt 0;
+      border-bottom: 1px solid {{ style.border }};
+    }
+    {% endif %}
+
+  {% if style.layout == 'minimal' %}
+    .contact {
+      margin-bottom: 14pt;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  {% endif %}
+
+    /* ── Split header ── */
+    .resume-top {
+      padding-bottom: 10pt;
+      margin-bottom: 10pt;
+      border-bottom: 2px solid {{ style.primary }};
+    }
+
+    .resume-top .resume-identity {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .resume-top .resume-identity-text {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16pt;
+    }
+
+    .resume-top h1 { margin-bottom: 0; flex: 1 1 auto; }
+
+    .resume-top .contact {
+      flex: 0 1 auto;
+      text-align: right;
+      max-width: 48%;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+
+    /* ── Solid top bar (no gradient) ── */
+    .resume-header-bar {
+      background: {{ style.primary }};
+      color: #f1f5f9;
+      padding: 14pt 16pt;
+      margin: 0 0 14pt 0;
+    }
+
+    .resume-header-bar h1 {
+      color: #ffffff;
+      margin-bottom: 5pt;
+    }
+
+    .resume-header-bar .contact {
+      color: #cbd5e1;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+
+    .resume-header-bar .contact a { color: #e2e8f0; }
+
+    /* ── Sidebar layout ── */
+    .resume-layout.sidebar-left {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .resume-sidebar,
+    .resume-main {
+      display: table-cell;
+      vertical-align: top;
+    }
+
+    .resume-sidebar {
+      width: 31%;
+      background: {{ style.primary }};
+      color: #e2e8f0;
+      padding: 14pt 12pt;
+    }
+
+    .resume-main {
+      width: 69%;
+      padding: 0 0 0 14pt;
+    }
+
+    .resume-sidebar h1 {
+      color: #ffffff;
+      font-size: {{ style.h1_size }};
+      margin-bottom: 8pt;
+    }
+
+    .resume-sidebar .contact {
+      color: #cbd5e1;
+      margin-bottom: 12pt;
+      padding-bottom: 10pt;
+      border-bottom: 1px solid {{ style.accent }};
+    }
+
+    .resume-sidebar .contact a { color: #94a3b8; }
+
+    .resume-sidebar h2 {
+      color: #94a3b8;
+      font-size: 9pt;
+      border-bottom: 1px solid {{ style.accent }};
+      margin-top: 10pt;
+      padding-bottom: 3pt;
+    }
+
+    .resume-sidebar ul { padding-left: 1em; }
+    .resume-sidebar li { color: #e2e8f0; font-size: calc({{ style.body_size }} - 0.5pt); }
+    .resume-sidebar p, .resume-sidebar strong { color: #e2e8f0; }
+    .resume-sidebar strong { color: #f8fafc; }
+
+    /* ── Section headings (main column) ── */
+    h2 {
+      font-family: {{ style.heading_font }};
+      font-size: {{ style.h2_size }};
+      font-weight: 700;
+      color: {{ style.primary }};
+      margin: {{ density.section_gap }} 0 5pt 0;
+      padding-bottom: 2pt;
+      border-bottom: 1px solid {{ style.border }};
+      {% if style.section_uppercase %}text-transform: uppercase; letter-spacing: 0.05em;{% endif %}
+    }
+
+    .resume-main h2:first-of-type,
+    .resume-body > .resume-section:first-child h2,
+    h2:first-of-type { margin-top: 0; }
+
+    /* ── Timeline (experience) ── */
+    .resume-section.timeline h3 {
+      position: relative;
+      padding-left: 11pt;
+      margin-left: 2pt;
+      border-left: 2px solid {{ style.border }};
+    }
+
+    .resume-section.timeline h3::before {
+      content: "";
+      position: absolute;
+      left: -5pt;
+      top: 3pt;
+      width: 6pt;
+      height: 6pt;
+      border-radius: 50%;
+      background: {{ style.primary }};
+    }
+
+    .resume-section.timeline h3 + p + ul,
+    .resume-section.timeline h3 + ul {
+      margin-left: 11pt;
+      padding-left: 1em;
+      border-left: 2px solid {{ style.surface }};
+    }
+
+    /* ── Roles ── */
+    h3 {
+      font-family: {{ style.heading_font }};
+      font-size: {{ style.h3_size }};
+      font-weight: 600;
+      color: {{ style.text }};
+      margin: 7pt 0 2pt 0;
+    }
+
+    h3 + p {
+      margin-top: 0;
+      color: {{ style.muted }};
+      font-size: calc({{ style.body_size }} - 0.5pt);
+    }
+
+    p { margin: 0 0 5pt 0; }
+
+    strong { font-weight: 700; color: {{ style.text }}; }
+
+    ul {
+      margin: 3pt 0 6pt 0;
+      padding-left: 1.15em;
+    }
+
+    li { margin-bottom: {{ density.list_gap }}; }
+    li::marker { color: {{ style.accent }}; }
+
+    hr { display: none; }
+
+    a { color: {{ style.secondary }}; text-decoration: none; }
+  </style>
+</head>
+<body class="layout-{{ style.layout }}">
+{{ body_html | safe }}
+</body>
+</html>
